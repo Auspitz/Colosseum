@@ -7,7 +7,7 @@
 #include "ParticleDefinitions.h"
 
 #include <string>
-#include "CameraManager.h"
+#include "AirSimCameraDirector.h"
 #include "common/AirSimSettings.hpp"
 #include "common/ClockFactory.hpp"
 #include "api/ApiServerBase.hpp"
@@ -30,7 +30,7 @@ public:
     FLevelLoaded OnLevelLoaded;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Refs")
-    ACameraManager* CameraDirector;
+    ACameraDirector* CameraDirector;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Debugging")
     bool EnableReport = false;

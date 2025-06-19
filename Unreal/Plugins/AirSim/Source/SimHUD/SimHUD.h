@@ -39,6 +39,9 @@ public:
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaSeconds) override;
 
+    UFUNCTION(BlueprintNativeEvent)
+    FString GetSettingsName() const;
+
 protected:
     virtual void setupInputBindings();
     void toggleRecordHandler();
@@ -49,14 +52,14 @@ protected:
 private:
     void initializeSubWindows();
     void createSimMode();
-    void initializeSettings();
+    void initializeSettings(const std::string& settingsName);
     void setUnrealEngineSettings();
     void loadLevel();
     void createMainWidget();
     const std::vector<AirSimSettings::SubwindowSetting>& getSubWindowSettings() const;
     std::vector<AirSimSettings::SubwindowSetting>& getSubWindowSettings();
 
-    bool getSettingsText(std::string& settingsText);
+    bool getSettingsText(std::string& settingsText, const std::string& fileName);
     bool getSettingsTextFromCommandLine(std::string& settingsText);
     bool readSettingsTextFromFile(const FString& fileName, std::string& settingsText);
     std::string getSimModeFromUser();

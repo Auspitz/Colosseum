@@ -22,7 +22,8 @@ void ASimHUD::BeginPlay()
 
     try {
         UAirBlueprintLib::OnBeginPlay();
-        initializeSettings();
+        FString SettingsName = GetSettingsName();
+        initializeSettings(TCHAR_TO_UTF8(*SettingsName));
         loadLevel();
 
         // Prevent a MavLink connection being established if changing levels
@@ -45,8 +46,15 @@ void ASimHUD::BeginPlay()
 
 void ASimHUD::Tick(float DeltaSeconds)
 {
+    Super::Tick(DeltaSeconds);
+
     if (simmode_ && simmode_->EnableReport)
         widget_->updateDebugReport(simmode_->getDebugReport());
+}
+
+FString ASimHUD::GetSettingsName_Implementation() const
+{
+    return "settings.json";
 }
 
 void ASimHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -203,6 +211,7 @@ void ASimHUD::setUnrealEngineSettings()
 
 void ASimHUD::setupInputBindings()
 {
+/*
     UAirBlueprintLib::EnableInput(this);
 
     UAirBlueprintLib::BindActionToKey("inputEventToggleRecording", EKeys::R, this, &ASimHUD::inputEventToggleRecording);
@@ -214,12 +223,13 @@ void ASimHUD::setupInputBindings()
     UAirBlueprintLib::BindActionToKey("InputEventToggleSubwindow1", EKeys::Two, this, &ASimHUD::inputEventToggleSubwindow1);
     UAirBlueprintLib::BindActionToKey("InputEventToggleSubwindow2", EKeys::Three, this, &ASimHUD::inputEventToggleSubwindow2);
     UAirBlueprintLib::BindActionToKey("InputEventToggleAll", EKeys::Zero, this, &ASimHUD::inputEventToggleAll);
+*/
 }
 
-void ASimHUD::initializeSettings()
+void ASimHUD::initializeSettings(const std::string& settingsName)
 {
     std::string settingsText;
-    if (getSettingsText(settingsText))
+    if (getSettingsText(settingsText, settingsName))
         AirSimSettings::initializeSettings(settingsText);
     else
         AirSimSettings::createDefaultSettingsFile();
@@ -229,7 +239,7 @@ void ASimHUD::initializeSettings()
         UAirBlueprintLib::LogMessageString(warning, "", LogDebugLevel::Failure);
     }
     for (const auto& error : AirSimSettings::singleton().error_messages) {
-        UAirBlueprintLib::ShowMessage(EAppMsgType::Ok, error, "settings.json");
+        UAirBlueprintLib::ShowMessage(EAppMsgType::Ok, error, settingsName);
     }
 }
 
@@ -329,12 +339,12 @@ FString ASimHUD::getLaunchPath(const std::string& filename)
 // Finally, check the user's documents folder.
 // If the settings file cannot be read, throw an exception
 
-bool ASimHUD::getSettingsText(std::string& settingsText)
+bool ASimHUD::getSettingsText(std::string& settingsText, const std::string& fileName)
 {
     return (getSettingsTextFromCommandLine(settingsText) ||
-            readSettingsTextFromFile(FString(msr::airlib::Settings::getExecutableFullPath("settings.json").c_str()), settingsText) ||
-            readSettingsTextFromFile(getLaunchPath("settings.json"), settingsText) ||
-            readSettingsTextFromFile(FString(msr::airlib::Settings::Settings::getUserDirectoryFullPath("settings.json").c_str()), settingsText));
+            readSettingsTextFromFile(FString(msr::airlib::Settings::getExecutableFullPath(fileName).c_str()), settingsText) ||
+            readSettingsTextFromFile(getLaunchPath(fileName), settingsText) ||
+            readSettingsTextFromFile(FString(msr::airlib::Settings::Settings::getUserDirectoryFullPath(fileName).c_str()), settingsText));
 }
 
 // Attempts to parse the settings file path or the settings text from the command line

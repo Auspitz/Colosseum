@@ -22,6 +22,9 @@
 
 #include "PawnEvents.h"
 
+DECLARE_MULTICAST_DELEGATE_EightParams(FOnPawnCollision, UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, 
+    bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit);
+
 class PawnSimApi : public msr::airlib::VehicleSimApiBase
 {
 public: //types
@@ -133,6 +136,8 @@ public: //Unreal specific methods
 
     void possess();
     void setRCForceFeedback(float rumble_strength, float auto_center);
+
+    FOnPawnCollision OnPawnCollision;
 
 private: //methods
     bool canTeleportWhileMove() const;

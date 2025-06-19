@@ -110,6 +110,7 @@ private: //members
     UMaterial* distortion_material_static_;
 
     std::vector<bool> camera_type_enabled_;
+
     FRotator gimbald_rotator_;
     float gimbal_stabilization_;
     const NedTransform* ned_transform_;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "common/AirSimSettings.hpp"
 #include "common/CommonStructs.hpp"
 #include "common/GeodeticConverter.hpp"
 #include "api/WorldSimApiBase.hpp"
