@@ -228,8 +228,12 @@ void ASimHUD::setupInputBindings()
 
 void ASimHUD::initializeSettings(const std::string& settingsName)
 {
+    const std::string fallbackSettings = "settings.json";
+    
     std::string settingsText;
     if (getSettingsText(settingsText, settingsName))
+        AirSimSettings::initializeSettings(settingsText);
+    else if (getSettingsText(settingsText, fallbackSettings))
         AirSimSettings::initializeSettings(settingsText);
     else
         AirSimSettings::createDefaultSettingsFile();
